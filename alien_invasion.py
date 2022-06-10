@@ -1,3 +1,4 @@
+from curses import KEY_DOWN
 import imp
 import sys
 
@@ -27,16 +28,29 @@ class AlienInvasion:
 
         while True:
             # Watch for keyboard and mouse events.
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    sys.exit()
-
-            # Redraw the screen during each pass through the loop.
-            self.screen.fill(self.bg_color)
-            self.ship.blitme()
-            # Make the most recently drawn screen visible.
-            pygame.display.flip()
-
+            self._check_events()
+            self.ship.update()
+            self._update_screen()
+    
+    def _check_events(self):
+        # Respond to keypresses and mouse events
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key ==pygame.K_RIGHT:
+                    # Move the ship to the right.
+                    self.ship.moving_right = True
+                elif event.type == pygame.KEYUP:
+                    if event.key ==pygame.K_RIGHT:
+                        self.ship.moving_right = False
+    def _update_screen(self):
+        # Redraw the screen during each pass through the loop.
+        self.screen.fill(self.bg_color)
+        self.ship.blitme()
+        # Make the most recently drawn screen visible.
+        pygame.display.flip()  
+        
 if __name__ == '__main__':
     # Make a game instance, and run the game.
     ai = AlienInvasion()
